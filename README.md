@@ -21,3 +21,5 @@ Pipeline Execution Result
 
 ![Pipeline:](https://github.com/dmoraesrs/images/blob/master/actions3.png)
 
+
+In the docker-publish.yml file we have described the docker image generation and publishing pipelines in the GCP registry
