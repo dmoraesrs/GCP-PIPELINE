@@ -43,37 +43,3 @@ jobs:
         GIT_TAG: ${{ steps.increment-git-tag.outputs.git-tag }}
       run: |-
         docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ secrets.ENV }} 
-
-  Deploy-PRD:
-      runs-on: ubuntu-latest
-      environment:
-        name: main
-      permissions:
-        contents: 'read'
-        id-token: 'write'
-  
-      steps:
-      - id: 'auth'
-        uses: 'google-github-actions/auth@v0'
-        with:
-          workload_identity_provider: ${{ secrets.PROVIDER }}
-          service_account: ${{ secrets.SERVICE_ACCOUNT }}
-  
-      - name: Checkout
-        uses: actions/checkout@v2
-  
-      - name: Build Docker Image
-        run: docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ secrets.ENV }} .
-  
-      - name: Login to GCR
-        uses: docker/login-action@v2
-        with:
-          registry: gcr.io
-          username: _json_key
-          password: ${{ secrets.GOOGLE_CREDENTIALS }}
-  
-      - name: Push Docker Image to Container Registry (GCR)
-        env:
-          GIT_TAG: ${{ steps.increment-git-tag.outputs.git-tag }}
-        run: |-
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ secrets.ENV }} 
